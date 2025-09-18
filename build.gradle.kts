@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.0.0")
+    implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.0.2")
     testImplementation(kotlin("test"))
 }
 
