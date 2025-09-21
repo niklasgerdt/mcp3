@@ -16,9 +16,9 @@ open class Config {
     @Bean
     open fun requestLoggingFilter(): CommonsRequestLoggingFilter {
         val loggingFilter = CommonsRequestLoggingFilter()
-        loggingFilter.setIncludeClientInfo(true)
-        loggingFilter.setIncludeQueryString(true)
-        loggingFilter.setIncludePayload(true)
+//        loggingFilter.setIncludeClientInfo(true)
+//        loggingFilter.setIncludeQueryString(true)
+//        loggingFilter.setIncludePayload(true)
         loggingFilter.setIncludeHeaders(true)
         loggingFilter.setMaxPayloadLength(64000)
         return loggingFilter

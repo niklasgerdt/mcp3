@@ -14,6 +14,11 @@ class restApi {
         return "Hello World!"
     }
 
+    @GetMapping("/foo")
+    fun foo(): String {
+        return "Hello World!"
+    }
+
     @GetMapping("/.well-known/oauth-protected-resource", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun auth1(): OauthProtectedResource {
         val r = OauthProtectedResource()
