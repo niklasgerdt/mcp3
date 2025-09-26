@@ -1,5 +1,7 @@
 package mcp
 
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.Mapping
@@ -8,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class restApi {
+
+    @Value("\${server.port:8080}")
+    private lateinit var serverPort: String
 
     @GetMapping("/api")
     fun api(): String {
@@ -19,36 +24,75 @@ class restApi {
         return "Hello World!"
     }
 
+    @GetMapping("/bar")
+    fun bar(): String {
+        return "bar"
+    }
+
     @GetMapping("/.well-known/oauth-protected-resource", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun auth1(): OauthProtectedResource {
-        val r = OauthProtectedResource()
-        return r
+        val baseUrl = "http://localhost:$serverPort"
+        return OauthProtectedResource(
+            resource = "$baseUrl/sse",
+            authorization_servers = listOf(baseUrl),
+            jwks_uri = "$baseUrl/oauth2/jwks",
+            bearer_methods_supported = listOf("header", "body", "query")
+        )
     }
 
-    @GetMapping("/.well-known/oauth-authorization-server",
-        produces = arrayOf(MediaType.APPLICATION_JSON_VALUE),
-        headers = arrayOf("Authorization, Content-type"),
-        consumes = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    @GetMapping("/.well-known/oauth-protected-resource/sse", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
+    fun sseResource(): OauthProtectedResource {
+        val baseUrl = "http://localhost:$serverPort"
+        return OauthProtectedResource(
+            resource = "$baseUrl/sse",
+            authorization_servers = listOf(baseUrl),
+            jwks_uri = "$baseUrl/oauth2/jwks",
+            bearer_methods_supported = listOf("header"),
+            resource_type = "server-sent-events",
+            scopes_supported = listOf("sse:read", "sse:subscribe"),
+            resource_documentation = "$baseUrl/docs/sse"
+        )
+    }
+
+    @GetMapping("/.well-known/oauth-authorization-server", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun auth2(): OautAuthorizationServer {
-        val r = OautAuthorizationServer()
-        return r
+        val baseUrl = "http://localhost:$serverPort"
+        return OautAuthorizationServer(
+            issuer = baseUrl,
+            authorization_endpoint = "$baseUrl/oauth2/authorize",
+            token_endpoint = "$baseUrl/oauth2/token",
+            jwks_uri = "$baseUrl/oauth2/jwks",
+            userinfo_endpoint = "$baseUrl/userinfo",
+            response_types_supported = listOf("code"),
+            grant_types_supported = listOf("authorization_code", "client_credentials"),
+            subject_types_supported = listOf("public"),
+            id_token_signing_alg_values_supported = listOf("RS256"),
+            scopes_supported = listOf("openid", "email", "profile", "user"),
+            token_endpoint_auth_methods_supported = listOf("client_secret_basic", "client_secret_post")
+        )
     }
 
-    class OauthProtectedResource {
-        val resource = "http://localhost:8080/sse"
-        val authorization_servers = listOf<String>("https://accounts.google.com")
-        val jwks_uri = "https://www.googleapis.com/oauth2/v3/certs"
-        val bearer_methods_supported = listOf<String>("header")
-    }
+    data class OauthProtectedResource(
+        val resource: String,
+        val authorization_servers: List<String>,
+        val jwks_uri: String,
+        val bearer_methods_supported: List<String>,
+        val resource_type: String? = null,
+        val scopes_supported: List<String>? = null,
+        val resource_documentation: String? = null
+    )
 
-    class OautAuthorizationServer {
-        val issuer = "https://accounts.google.com"
-        val authorization_endpoint = "https://accounts.google.com/o/oauth2/v2/auth"
-        val token_endpoint = "https://oauth2.googleapis.com/token"
-        val jwks_uri = "https://www.googleapis.com/oauth2/v3/certs"
-        val response_types_supported =  listOf<String>("code")
-        val subject_types_supported = listOf<String>("public")
-        val id_token_signing_alg_values_supported = listOf<String>("RS256")
-        val scopes_supported = listOf<String>("openid", "email", "profile")
-    }
+    data class OautAuthorizationServer(
+        val issuer: String,
+        val authorization_endpoint: String,
+        val token_endpoint: String,
+        val jwks_uri: String,
+        val userinfo_endpoint: String? = null,
+        val response_types_supported: List<String>,
+        val grant_types_supported: List<String>? = null,
+        val subject_types_supported: List<String>,
+        val id_token_signing_alg_values_supported: List<String>,
+        val scopes_supported: List<String>,
+        val token_endpoint_auth_methods_supported: List<String>? = null
+    )
 }
