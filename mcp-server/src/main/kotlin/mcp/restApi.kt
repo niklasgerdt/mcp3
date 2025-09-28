@@ -32,10 +32,11 @@ class restApi {
     @GetMapping("/.well-known/oauth-protected-resource", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun auth1(): OauthProtectedResource {
         val baseUrl = "http://localhost:$serverPort"
+        val authBaseUrl = "http://localhost:9000"
         return OauthProtectedResource(
             resource = "$baseUrl/sse",
-            authorization_servers = listOf(baseUrl),
-            jwks_uri = "$baseUrl/oauth2/jwks",
+            authorization_servers = listOf(authBaseUrl),
+            jwks_uri = "$authBaseUrl/oauth2/jwks",
             bearer_methods_supported = listOf("header", "body", "query")
         )
     }
@@ -43,6 +44,7 @@ class restApi {
     @GetMapping("/.well-known/oauth-protected-resource/sse", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun sseResource(): OauthProtectedResource {
         val baseUrl = "http://localhost:$serverPort"
+        val authBaseUrl = "http://localhost:9000"
         return OauthProtectedResource(
             resource = "$baseUrl/sse",
             authorization_servers = listOf(baseUrl),
@@ -56,7 +58,7 @@ class restApi {
 
     @GetMapping("/.well-known/oauth-authorization-server", produces = arrayOf(MediaType.APPLICATION_JSON_VALUE))
     fun auth2(): OautAuthorizationServer {
-        val baseUrl = "http://localhost:$serverPort"
+        val baseUrl = "http://localhost:9000"
         return OautAuthorizationServer(
             issuer = baseUrl,
             authorization_endpoint = "$baseUrl/oauth2/authorize",
