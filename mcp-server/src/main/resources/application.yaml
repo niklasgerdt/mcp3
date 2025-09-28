@@ -1,0 +1,78 @@
+# The format used for the keystore. It could be set to JKS in case it is a JKS file
+#server.ssl.key-store-type=PKCS12
+# The path to the keystore containing the certificate
+#server.ssl.key-store=classpath:keystore/baeldung.p12
+# The password used to generate the certificate
+#server.ssl.key-store-password=xxxxxxxxxxxxxx
+# The alias mapped to the certificate
+#server.ssl.key-alias=baeldung
+#server.ssl.enabled=true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework: debug
+    org.springframework.web.filter.CommonsRequestLoggingFilter: debug
+
+spring:
+  ai:
+    mcp:
+      server:
+        name: mcp3
+        version: 0.0.1
+        type: SYNC
+        enabled: true
+        stdio: false
+        sse-message-endpoint: /mcp/message
+        resource-change-notification: true
+        tool-change-notification: true
+        prompt-change-notification: true
+  security:
+    user:
+      name: user
+      password: pwd
+      roles: USER
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080
+          jwk-set-uri: http://localhost:8080/oauth2/jwks
+      client:
+        registration:
+          my-login-client:
+            client-id: "abcd"
+            client-secret: "password"
+            client-name: "Client for OpenID Connect"
+            provider: "my-oauth-provider"
+            scope: "openid,profile,email,phone,address"
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-authentication-method: "client_secret_basic"
+            authorization-grant-type: "authorization_code"
+          my-client-1:
+            client-id: "abcd"
+            client-secret: "password"
+            client-name: "Client for user scope"
+            provider: "my-oauth-provider"
+            scope: "user"
+            redirect-uri: "{baseUrl}/authorized/user"
+            client-authentication-method: "client_secret_basic"
+            authorization-grant-type: "authorization_code"
+          my-client-2:
+            client-id: "abcd"
+            client-secret: "password"
+            client-name: "Client for email scope"
+            provider: "my-oauth-provider"
+            scope: "email"
+            redirect-uri: "{baseUrl}/authorized/email"
+            client-authentication-method: "client_secret_basic"
+            authorization-grant-type: "authorization_code"
+        provider:
+          my-oauth-provider:
+            authorization-uri: "http://localhost:9000/oauth2/authorize"
+            token-uri: "http://localhost:9000/oauth2/token"
+            user-info-uri: "http://localhost:9000/userinfo"
+            user-info-authentication-method: "header"
+            jwk-set-uri: "http://localhost:9000/oauth2/jwks"
+            user-name-attribute: "name"

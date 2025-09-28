@@ -1,10 +1,10 @@
-package mcp
+package mcp.auth
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class App
+open class App
 
 fun main(args: Array<String>) {
     runApplication<App>(*args)

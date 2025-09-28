@@ -1,13 +1,18 @@
-package mcp
+package mcp.auth
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class restApi {
+class Api {
 
     @GetMapping("/api")
     fun api(): String {
-        return "Hello World!"
+        return "api"
+    }
+
+    @GetMapping("/foo")
+    fun foo(): String {
+        return "foo"
     }
 }

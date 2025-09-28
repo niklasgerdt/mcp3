@@ -4,10 +4,11 @@ import org.springframework.ai.tool.ToolCallbackProvider
 import org.springframework.ai.tool.annotation.Tool
 import org.springframework.ai.tool.method.MethodToolCallbackProvider
 import org.springframework.context.annotation.Bean
+import org.springframework.stereotype.Service
 import java.util.List
 
-
-internal class AuthorRepository {
+@Service
+class AuthorRepository {
 
     @Tool(description = "Get Baeldung author details using an article title")
     fun getAuthorByArticleTitle(articleTitle: String?): Author {
@@ -26,10 +27,3 @@ internal class AuthorRepository {
     data class Author(val name: String?, val email: String?)
 }
 
-@Bean
-fun authorTools(): ToolCallbackProvider {
-    return MethodToolCallbackProvider
-        .builder()
-        .toolObjects(AuthorRepository())
-        .build()
-}
