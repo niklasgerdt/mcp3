@@ -19,8 +19,8 @@ dependencies {
 //    implementation("org.springframework.security:spring-security-web:6.5.5")
 //    implementation("org.springframework")
     testImplementation(kotlin("test"))
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test:6.5.5")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:3.5.5")
 }
 
 tasks.test {
