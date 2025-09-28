@@ -9,7 +9,9 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 import java.util.*
 
@@ -18,7 +20,11 @@ class ClientRegistrationController(
     private val registeredClientRepository: RegisteredClientRepository
 ) {
 
-    @PostMapping("/oauth2/register", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(
+        "/oauth2/register",
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun registerClient(@RequestBody request: ClientRegistrationRequest): ResponseEntity<ClientRegistrationResponse> {
         try {
             // Generate client credentials
@@ -31,6 +37,7 @@ class ClientRegistrationController(
                 .clientSecret("{noop}$clientSecret") // {noop} means no password encoder
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .redirectUris { uris ->
