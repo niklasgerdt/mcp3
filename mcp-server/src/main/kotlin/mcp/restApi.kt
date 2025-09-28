@@ -72,7 +72,9 @@ class restApi {
             subject_types_supported = listOf("public"),
             id_token_signing_alg_values_supported = listOf("RS256"),
             scopes_supported = listOf("openid", "email", "profile", "user"),
-            token_endpoint_auth_methods_supported = listOf("client_secret_basic", "client_secret_post")
+            token_endpoint_auth_methods_supported = listOf("client_secret_basic", "client_secret_post"),
+            code_challenge_methods_supported = listOf("S256", "plain")
+
         )
     }
 
@@ -98,6 +100,7 @@ class restApi {
         val subject_types_supported: List<String>,
         val id_token_signing_alg_values_supported: List<String>,
         val scopes_supported: List<String>,
-        val token_endpoint_auth_methods_supported: List<String>? = null
+        val token_endpoint_auth_methods_supported: List<String>? = null,
+        val code_challenge_methods_supported: List<String>? = null
     )
 }
